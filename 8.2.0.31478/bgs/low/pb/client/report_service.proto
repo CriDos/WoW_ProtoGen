@@ -1,0 +1,37 @@
+import "bgs/low/pb/client/account_types.proto";
+import "bgs/low/pb/client/report_types.proto";
+import "bgs/low/pb/client/rpc_types.proto";
+import "bgs/low/pb/client/global_extensions/message_options.proto";
+import "bgs/low/pb/client/global_extensions/field_options.proto";
+import "bgs/low/pb/client/global_extensions/method_options.proto";
+import "bgs/low/pb/client/global_extensions/service_options.proto";
+
+package bgs.protocol.report.v1;
+
+option cc_generic_services = false;
+
+message SendReportRequest {
+	option (message_options).custom_validator = true;
+	required .bgs.protocol.report.v1.Report report = 1;
+	optional uint32 program = 2;
+}
+
+message SubmitReportRequest {
+	option (message_options).custom_validator = true;
+	optional .bgs.protocol.account.v1.GameAccountHandle agent_id = 1;
+	optional .bgs.protocol.report.v1.ReportType report_type = 2;
+	optional uint32 program = 3;
+}
+
+service ReportService {
+	option (service_options).descriptor_name = "bnet.protocol.report.ReportService";
+	option (service_options).shard_name = "report";
+	option (sdk_service_options).outbound = true;
+	rpc SendReport (.bgs.protocol.report.v1.SendReportRequest) returns (.bgs.protocol.NoData) {
+		option (method_options).id = 1;
+	}
+	rpc SubmitReport (.bgs.protocol.report.v1.SubmitReportRequest) returns (.bgs.protocol.NoData) {
+		option (method_options).id = 2;
+	}
+}
+

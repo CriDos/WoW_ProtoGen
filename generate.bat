@@ -1,0 +1,1 @@
+protogen.exe --proto_path=8.2.0.31478 --csharp_out=OUT_DIR **/*.proto
